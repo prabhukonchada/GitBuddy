@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Git Buddy</string>
+    <string name="search_menu">Search</string>
 </resources>
