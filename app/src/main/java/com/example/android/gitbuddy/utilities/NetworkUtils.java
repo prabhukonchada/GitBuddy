@@ -55,8 +55,13 @@ public class NetworkUtils {
             scanner.useDelimiter("\\A");
 
             boolean hasInput = scanner.hasNext();
+
+            Log.d("Has Input",String.valueOf(hasInput));
+
             if (hasInput) {
-                return scanner.next();
+                String test = scanner.next();
+                Log.d("test",test);
+                return test;
             } else {
                 return null;
             }
