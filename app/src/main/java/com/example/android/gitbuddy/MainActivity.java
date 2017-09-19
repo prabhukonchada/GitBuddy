@@ -9,14 +9,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.gitbuddy.utilities.NetworkUtils;
+
 import org.w3c.dom.Text;
+
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText mSearchBoxEditText;
     TextView mUrlDisplayTextView;
     TextView mSearchResultsTextView;
-    ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void makeGitHubSearchQuery()
+    {
+        String gitHubQuery = mSearchBoxEditText.getText().toString();
+        URL gitHubSearchUrl = NetworkUtils.buildUrl(gitHubQuery);
+        mUrlDisplayTextView.setText(gitHubSearchUrl.toString());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -42,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         if(menuItemSelected == R.id.action_search)
         {
             Toast.makeText(this,"Search Menu Selected",Toast.LENGTH_LONG).show();
+            makeGitHubSearchQuery();
             return true;
         }
         return super.onOptionsItemSelected(item);
