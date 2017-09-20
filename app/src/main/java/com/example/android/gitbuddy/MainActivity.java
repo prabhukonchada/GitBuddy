@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     EditText mSearchBoxEditText;
     TextView mUrlDisplayTextView;
     TextView mSearchResultsTextView;
+    TextView mErrorMessage;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,21 @@ public class MainActivity extends AppCompatActivity {
         mSearchBoxEditText = (EditText)findViewById(R.id.et_search_box);
         mUrlDisplayTextView = (TextView)findViewById(R.id.tv_url_display);
         mSearchResultsTextView = (TextView)findViewById(R.id.tv_github_search_results_json);
+        mErrorMessage = (TextView)findViewById(R.id.errorMessage);
+        progressBar = (ProgressBar)findViewById(R.id.pb_loading);
 
+    }
+
+    private void showJsonDataView()
+    {
+        mSearchResultsTextView.setVisibility(View.VISIBLE);
+        mErrorMessage.setVisibility(View.INVISIBLE);
+    }
+
+    private void showErrorMessageView()
+    {
+        mErrorMessage.setVisibility(View.VISIBLE);
+        mSearchResultsTextView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -51,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
 
     class GitHubQueryTask extends AsyncTask<URL,Void,String>
     {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected String doInBackground(URL... urls) {
             String response="";
@@ -64,8 +89,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            mSearchResultsTextView.setText(s);
-            super.onPostExecute(s);
+            progressBar.setVisibility(View.INVISIBLE);
+            if(s != null && !s.equals("")) {
+                showJsonDataView();
+                mSearchResultsTextView.setText(s);
+            }
+            else
+            {
+                showErrorMessageView();
+            }
         }
     }
 
