@@ -26,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
     TextView mSearchResultsTextView;
     TextView mErrorMessage;
     ProgressBar progressBar;
+    static String URL_TAG = "URL";
+    static String RESULT_TAG = "RESULT";
+    String resultData;
+    String url;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,16 @@ public class MainActivity extends AppCompatActivity {
         mSearchResultsTextView = (TextView)findViewById(R.id.tv_github_search_results_json);
         mErrorMessage = (TextView)findViewById(R.id.errorMessage);
         progressBar = (ProgressBar)findViewById(R.id.pb_loading);
+
+        if(savedInstanceState != null)
+        {
+            String url = savedInstanceState.getString(URL_TAG);
+            String result = savedInstanceState.getString(RESULT_TAG);
+            setUrl(url);
+            setResultData(result);
+            mUrlDisplayTextView.setText(url);
+            mSearchResultsTextView.setText(result);
+        }
 
     }
 
@@ -63,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         String gitHubQuery = mSearchBoxEditText.getText().toString();
         URL gitHubSearchUrl = NetworkUtils.buildUrl(gitHubQuery);
         mUrlDisplayTextView.setText(gitHubSearchUrl.toString());
-
+        setUrl(gitHubSearchUrl.toString());
         new GitHubQueryTask().execute(gitHubSearchUrl);
     }
 
@@ -93,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             if(s != null && !s.equals("")) {
                 showJsonDataView();
                 mSearchResultsTextView.setText(s);
+                setResultData(s);
             }
             else
             {
@@ -115,4 +131,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(RESULT_TAG,resultData);
+        outState.putString(URL_TAG,url);
+    }
+
+    private void setResultData(String data)
+    {
+        resultData = data;
+    }
+
+    private void setUrl(String url)
+    {
+        this.url = url;
+    }
 }
