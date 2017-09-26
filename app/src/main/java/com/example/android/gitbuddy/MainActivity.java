@@ -92,14 +92,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<String> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<String>(this) {
+            String storeRawJson=null;
 
             @Override
             protected void onStartLoading() {
-                progressBar.setVisibility(View.VISIBLE);
+
                 if(args == null)
                     return;
+                else
+                    progressBar.setVisibility(View.VISIBLE);
 
-                forceLoad();
+
+                if(storeRawJson != null)
+                {
+                    deliverResult(storeRawJson);
+                }
+                else
+                {
+                    forceLoad();
+                }
+            }
+
+            @Override
+            public void deliverResult(String data) {
+                storeRawJson = data;
+                super.deliverResult(data);
             }
 
             @Override
@@ -123,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         };
+
+
     }
 
     @Override
