@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mSearchResultsTextView = (TextView)findViewById(R.id.tv_github_search_results_json);
         mErrorMessage = (TextView)findViewById(R.id.errorMessage);
         progressBar = (ProgressBar)findViewById(R.id.pb_loading);
+
+        getSupportLoaderManager().initLoader(GIT_HUB_LOADER_IDENTIFIER,null,this);
     }
 
     private void showJsonDataView()
